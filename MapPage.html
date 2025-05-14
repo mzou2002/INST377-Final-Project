@@ -1,1 +1,66 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Map</title>
+        <link rel="stylesheet" href="style.css" />
+        <!-- Leaflet CSS -->
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-XQoYMqMTK8LpLeA2T4Jm4gpH3wvv0v4QT+P+0hC1p2M="
+            crossorigin=""
+        />
+        <style>
+            /* page-specific */
+            #mapid {
+            height: 80vh;
+            border-radius: 8px;
+            }
+            .map-container {
+            padding: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            }
+        </style>
+    </head>
 
+    <body>
+        <h1>WhatWeather</h1>
+        <nav id="main-nav">
+            <ul>
+              <li><a href="HomePage.html">Home</a></li>
+              <li><a href="MapPage.html">Map</a></li>
+              <li><a href="AboutPage.html">About</a></li>
+            </ul>
+        <nav id="main-nav"></nav>
+
+        <div class="map-container">
+            <h1>Interactive Map</h1>
+            <div id="mapid"></div>
+        </div>
+
+        <!-- Leaflet JS -->
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-o9N1jzXkXb+DbI7Zqld6jRaaZ2XnYvbjvE+Y5C1BtkM="
+            crossorigin=""
+        ></script>
+        <script>
+            // initialize map centered on [0,0], zoom 2
+            const map = L.map('mapid').setView([0, 0], 2);
+
+            // OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Example marker
+            L.marker([0, 0])
+            .addTo(map)
+            .bindPopup('Equator & Prime Meridian')
+            .openPopup();
+        </script>
+    </body>
+</html>

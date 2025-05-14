@@ -1,1 +1,35 @@
+<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Weather Homepage</title>
+    <link rel="stylesheet" href="style.css">
+    </head>
 
+    <body>
+        <h1>WhatWeather</h1>
+        <nav id="main-nav">
+            <ul>
+              <li><a href="HomePage.html">Home</a></li>
+              <li><a href="MapPage.html">Map</a></li>
+              <li><a href="AboutPage.html">About</a></li>
+            </ul>
+        </nav>
+        <div class="weather-container">
+            <h1>Current Weather</h1>
+            <form id="city-form">
+            <input type="text" id="city-input" placeholder="Enter city name" required>
+            <button type="submit">Get Weather</button>
+            </form>
+            <div id="weather-info" class="hidden">
+            <h2 id="location"></h2>
+            <p><strong>Temperature:</strong> <span id="temp"></span>°C</p>
+            <p><strong>Conditions:</strong> <span id="description"></span></p>
+            <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
+            </div>
+            <div id="forecast" class="forecast-container hidden"></div>
+            <p id="error-msg" class="error hidden"></p>
+        </div>
+
+        <script src="script.js" defer></script>
+    </body>
+</html>
