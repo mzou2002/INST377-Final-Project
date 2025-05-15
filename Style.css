@@ -96,4 +96,19 @@ button {
     border-radius: 10px;
 }
 
+#link {
+    text-decoration: underline;
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
   
+  #error-msg {
+    color: #ff6b6b;
+  }
+  
+  .hidden {
+    display: none;
+  }

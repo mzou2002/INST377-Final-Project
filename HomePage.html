@@ -6,30 +6,48 @@
     </head>
 
     <body>
-        <h1>WhatWeather</h1>
+        <h1>WhatWeather &#x26c5;</h1>
         <nav id="main-nav">
-            <ul>
-              <li><a href="HomePage.html">Home</a></li>
-              <li><a href="MapPage.html">Map</a></li>
-              <li><a href="AboutPage.html">About</a></li>
-            </ul>
+          <ul>
+            <li><a href="HomePage.html">Home</a></li>
+            <li><a href="MapPage.html">Map</a></li>
+            <li><a href="AboutPage.html">About</a></li>
+          </ul>
         </nav>
+      
         <div class="weather-container">
-            <h1>Current Weather</h1>
-            <form id="city-form">
+          <h1>Current Weather</h1>
+          <form id="city-form">
             <input type="text" id="city-input" placeholder="Enter city name" required>
             <button type="submit">Get Weather</button>
-            </form>
-            <div id="weather-info" class="hidden">
+          </form>
+      
+          <div id="weather-info" class="hidden">
             <h2 id="location"></h2>
             <p><strong>Temperature:</strong> <span id="temp"></span>°C</p>
             <p><strong>Conditions:</strong> <span id="description"></span></p>
             <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
-            </div>
-            <div id="forecast" class="forecast-container hidden"></div>
-            <p id="error-msg" class="error hidden"></p>
+          </div>
+      
+          <!-- New: Air Quality display -->
+          <div id="air-quality" class="hidden">
+            <p><strong>Air Quality Index:</strong> <span id="aqi"></span></p>
+          </div>
+      
+          <!-- 5‑day forecast cards -->
+          <div id="forecast" class="forecast-container hidden"></div>
+      
+          <!-- New: Chart.js canvas -->
+          <div id="chart-container" class="chart-container hidden">
+            <canvas id="forecastChart"></canvas>
+          </div>
+      
+          <p id="error-msg" class="error hidden"></p>
         </div>
+      
+        <!-- Chart.js (second library) -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
-        <script src="script.js" defer></script>
+        <script src="script.js"></script>
     </body>
 </html>
