@@ -10,27 +10,87 @@ const chartContainer = document.getElementById('chart-container');
 
 let forecastChart;  // will hold our Chart.js instance
 
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const city = cityInput.value.trim();
-  if (!city) return showError('Please enter a city name.');
+document.getElementById('city-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-  // reset
-  infoDiv .classList.add('hidden');
-  aqiDiv  .classList.add('hidden');
-  forecastDiv .classList.add('hidden');
-  chartContainer.classList.add('hidden');
-  errorMsg .classList.add('hidden');
+    const city = document.getElementById('city-input').value;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
-  try {
-    const data = await fetchWeather(city);
-    displayWeather(data);
-    // 3rd fetch: air quality
-    fetchAirQuality(data.coord.lat, data.coord.lon);
-  } catch (err) {
-    showError(err.message);
-  }
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('City not found');
+        }
+
+        const data = await response.json();
+
+        // Update weather information
+        document.getElementById('location').textContent = data.name;
+        document.getElementById('temp').textContent = data.main.temp;
+        document.getElementById('description').textContent = data.weather[0].description;
+        document.getElementById('humidity').textContent = data.main.humidity;
+
+        // Update coordinates
+        document.getElementById('latitude').textContent = data.coord.lat;
+        document.getElementById('longitude').textContent = data.coord.lon;
+
+        // Show the weather info section
+        document.getElementById('weather-info').classList.remove('hidden');
+
+        // Fetch and display the 5-day forecast
+        fetchForecast(data.coord.lat, data.coord.lon);
+    } catch (error) {
+        document.getElementById('error-msg').textContent = error.message;
+        document.getElementById('error-msg').classList.remove('hidden');
+    }
 });
+
+async function fetchForecast(lat, lon) {
+    const endpoint = `https://api.openweathermap.org/data/2.5/onecall`
+        + `?lat=${lat}&lon=${lon}`
+        + `&exclude=current,minutely,hourly,alerts`
+        + `&units=metric`
+        + `&appid=${apiKey}`;
+
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+        console.warn('Failed to fetch forecast data');
+        return;
+    }
+
+    const data = await response.json();
+    displayForecast(data.daily);
+}
+
+function displayForecast(dailyData) {
+    const forecastDiv = document.getElementById('forecast');
+    forecastDiv.innerHTML = ''; // Clear previous forecast
+
+    // Take days 1–5 (skip today at index 0)
+    dailyData.slice(1, 6).forEach(day => {
+        const date = new Date(day.dt * 1000)
+            .toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+        const iconCode = day.weather[0].icon;
+        const description = day.weather[0].description;
+        const maxTemp = Math.round(day.temp.max);
+        const minTemp = Math.round(day.temp.min);
+
+        // Create a forecast card
+        const card = document.createElement('div');
+        card.className = 'forecast-day';
+        card.innerHTML = `
+            <h3>${date}</h3>
+            <img src="https://openweathermap.org/img/wn/${iconCode}@2x.png" alt="${description}" />
+            <p>${description}</p>
+            <p>↑ ${maxTemp}°C  ↓ ${minTemp}°C</p>
+        `;
+
+        forecastDiv.appendChild(card);
+    });
+
+    forecastDiv.classList.remove('hidden'); // Show the forecast container
+}
 
 // 1st fetch: current weather
 async function fetchWeather(city) {
