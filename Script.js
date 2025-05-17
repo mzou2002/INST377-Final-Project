@@ -62,36 +62,6 @@ async function fetchForecast(lat, lon) {
     displayForecast(data.daily);
 }
 
-function displayForecast(dailyData) {
-    const forecastDiv = document.getElementById('forecast');
-    forecastDiv.innerHTML = ''; // Clear previous forecast
-
-    // Take days 1–5 (skip today at index 0)
-    dailyData.slice(1, 6).forEach(day => {
-        const date = new Date(day.dt * 1000)
-            .toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-
-        const iconCode = day.weather[0].icon;
-        const description = day.weather[0].description;
-        const maxTemp = Math.round(day.temp.max);
-        const minTemp = Math.round(day.temp.min);
-
-        // Create a forecast card
-        const card = document.createElement('div');
-        card.className = 'forecast-day';
-        card.innerHTML = `
-            <h3>${date}</h3>
-            <img src="https://openweathermap.org/img/wn/${iconCode}@2x.png" alt="${description}" />
-            <p>${description}</p>
-            <p>↑ ${maxTemp}°C  ↓ ${minTemp}°C</p>
-        `;
-
-        forecastDiv.appendChild(card);
-    });
-
-    forecastDiv.classList.remove('hidden'); // Show the forecast container
-}
-
 // 1st fetch: current weather
 async function fetchWeather(city) {
   const endpoint = 
