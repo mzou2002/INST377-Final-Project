@@ -10,15 +10,14 @@
             crossorigin=""
         />
         <style>
-            /* page-specific */
             #mapid {
-            height: 80vh;
-            border-radius: 8px;
+                height: 80vh;
+                border-radius: 8px;
             }
             .map-container {
-            padding: 1rem;
-            max-width: 800px;
-            margin: 0 auto;
+                padding: 1rem;
+                max-width: 800px;
+                margin: 0 auto;
             }
         </style>
     </head>
@@ -27,15 +26,11 @@
         <h1>WhatWeather &#x26c5;</h1>
         <nav id="main-nav">
             <ul>
-              <li><a href="HomePage.html">Home</a></li>
-              <li><a href="MapPage.html">Map</a></li>
-              <li><a href="AboutPage.html">About</a></li>
+                <li><a href="HomePage.html">Home</a></li>
+                <li><a href="MapPage.html">Map</a></li>
+                <li><a href="AboutPage.html">About</a></li>
             </ul>
-
-        <div class="map-container">
-            <h1>Interactive Map</h1>
-            <div id="mapid"></div>
-        </div>
+        </nav>
 
         <div class="map-container">
             <h1>Interactive Map</h1>
@@ -51,20 +46,12 @@
             crossorigin=""
         ></script>
         <script>
-            // initialize map centered on [0,0], zoom 2
             const map = L.map('mapid').setView([0, 0], 2);
 
-            // OpenStreetMap tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; OpenStreetMap contributors'
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
-
-            // Example marker
-            L.marker([0, 0])
-            .addTo(map)
-            .bindPopup('Equator & Prime Meridian')
-            .openPopup();
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -72,21 +59,54 @@
                         const { latitude, longitude } = position.coords;
                         map.setView([latitude, longitude], 13);
 
-                        // Add a marker at the user's location
                         L.marker([latitude, longitude])
                             .addTo(map)
                             .bindPopup('You are here!')
                             .openPopup();
                     },
-                    () => {
-                        console.warn('Geolocation permission denied');
+                    (error) => {
+                        console.warn('Geolocation error:', error.message);
+                        map.setView([37.7749, -122.4194], 13); // Default to San Francisco
                     }
                 );
             } else {
                 console.warn('Geolocation is not supported by this browser');
+                map.setView([37.7749, -122.4194], 13); // Default to San Francisco
             }
-            
-        </script>
 
+            document.getElementById('search-btn').addEventListener('click', async () => {
+                const location = document.getElementById('location-input').value.trim();
+                if (!location) {
+                    alert('Please enter a location');
+                    return;
+                }
+
+                const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`;
+
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch location data');
+                    }
+
+                    const data = await response.json();
+
+                    if (data.length > 0) {
+                        const { lat, lon } = data[0];
+                        map.setView([lat, lon], 13);
+
+                        L.marker([lat, lon])
+                            .addTo(map)
+                            .bindPopup(`Location: ${location}`)
+                            .openPopup();
+                    } else {
+                        alert('Location not found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching location:', error);
+                    alert('An error occurred while searching for the location.');
+                }
+            });
+        </script>
     </body>
 </html>
