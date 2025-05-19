@@ -10,6 +10,30 @@ const chartContainer = document.getElementById('chart-container');
 
 let forecastChart;  // will hold our Chart.js instance
 
+
+let currentCity = '';
+let currentLat = 0;
+let currentLon = 0;
+
+// 2️⃣ Whenever you call your weather‐fetching function, update them:
+async function fetchWeather(cityName) {
+  const resp = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`);
+  const data = await resp.json();
+
+  // Update globals
+  currentCity = cityName;
+  currentLat  = data.coord.lat;
+  currentLon  = data.coord.lon;
+
+  // …now render your weather info into the DOM…
+}
+
+// 3️⃣ Later, when the user clicks “Save This City as Favorite”:
+document.getElementById('save-favorite-btn').addEventListener('click', () => {
+  // currentCity/currentLat/currentLon are already set by fetchWeather
+  saveFavorite(currentCity, currentLat, currentLon);
+});
+
 document.getElementById('city-form').addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -183,4 +207,25 @@ function displayAirQuality(data) {
 function showError(msg) {
   errorMsg.textContent = msg;
   errorMsg.classList.remove('hidden');
+}
+
+// 4th fetch: load saved favorites on page load
+async function loadFavorites() {
+  const res = await fetch('https://YOUR_DOMAIN/api/favorites');
+  const favs = await res.json();
+  // render these in a sidebar or dropdown
+  console.log('Saved favorites:', favs);
+}
+
+window.addEventListener('DOMContentLoaded', loadFavorites);
+
+// 5th fetch: when user clicks “Save this city” button
+async function saveFavorite(city, lat, lon) {
+  const res = await fetch('https://YOUR_DOMAIN/api/favorites', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ city, lat, lon })
+  });
+  const saved = await res.json();
+  console.log('Saved to Supabase:', saved);
 }

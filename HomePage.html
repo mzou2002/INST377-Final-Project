@@ -29,7 +29,7 @@
             <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
             <!-- New: Coordinates display -->
             <p><strong>Coordinates:</strong> Latitude: <span id="latitude"></span>, Longitude: <span id="longitude"></span></p>
-        </div>
+          </div>
       
           <!-- New: Air Quality display -->
           <div id="air-quality" class="hidden">
@@ -39,6 +39,11 @@
           <!-- 5‑day forecast cards -->
           <div id="forecast" class="forecast-container hidden"></div>
       
+          <div id="favorites-section">
+            <h2>Saved Favorites</h2>
+            <ul id="favorites-list"></ul>
+            <button id="save-favorite-btn">Save This City as Favorite</button>
+          </div>
           <!-- New: Chart.js canvas -->
           <div id="chart-container" class="chart-container hidden">
             <canvas id="forecastChart"></canvas>
